@@ -13,9 +13,9 @@ Activity.delete_all
 
 
 puts "Seeding User"
-user1 = User.create(username: "Nick", password_digest: "123")
-user2 = User.create(username: "Eric", password_digest: "123")
-user3 = User.create(username: "Greg", password_digest: "123")
+user1 = User.create(username: "Nick", password: "123")
+user2 = User.create(username: "Eric", password: "123")
+user3 = User.create(username: "Greg", password: "123")
 
 puts "Seeding Trip"
 trip1 = Trip.create(name: "NY-CHC", startLatitude: 40.7128, startLongitude: 74.0060, user_id: user1.id)
