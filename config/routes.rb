@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
+
   post "/login", to: "auth#login"
+  get "/me", to: "users#me"
 
   post "/createUser", to: "auth#create"
   get "/profile", to: "users#show"
@@ -8,6 +10,7 @@ Rails.application.routes.draw do
   post "/createLocation", to: "location#create"
 
   patch "/userTrips", to: "users#update"
+
 
   resources :activities, only: [:index, :show]
   resources :locations, only: [:index, :show]

@@ -1,6 +1,7 @@
 class TripsController < ApplicationController
 rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
 before_action :authenticate, only: [:index, :show, :create, :update, :destroy]
+    # skip_before_action :authenticate, only: [:index, :create]
 
     def index
         trips = Trip.all

@@ -1,3 +1,3 @@
 class TripSerializer < ActiveModel::Serializer
-  attributes :id, :name, :startLatitude, :startLongitude, :user_id
+  attributes :id, :name, :startLatitude, :startLongitude, :user_id, :locations
 end

@@ -1,8 +1,13 @@
 class ApplicationController < ActionController::API
-    # before_action :authorized
-
+    before_action :authenticate
+   
     def authenticate
-        @current_user = User.first
+        auth_header = request.headers["Authorization"]
+        token = auth_header.split.last
+        payload = JWT.decode(token, 'my_s3cr3t', true, {algorithm: 'HS256'})[0]
+        @current_user= User.find_by(id: payload["user_id"])
+    rescue
+        render json: { errors: ["Not Authorized"] }, status: :unauthorized
     end
 
     def encode_token(payload)

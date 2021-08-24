@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 # rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
-    skip_before_action :authorized, only: [:create, :login]
+    before_action :authenticate, only: [:me]
    
     def login
         # byebug
@@ -8,14 +8,13 @@ class UsersController < ApplicationController
         if @user && @user.authenticate(params[:password])
             render json: @user
         else
-            render_not_found_response
+            render json: {error: "Invalid username or password"}, status: :unauthorized
         end
     end
     
-    # def me
-    #     user = User.first
-    #     render json: user
-    # end
+    def me
+        render json: @current_user
+    end
 
     def index
         users = User.all
@@ -54,7 +53,7 @@ class UsersController < ApplicationController
     private
 
     def render_not_found_response
-        render json: {error: "User not found"}, status: :render+_render_not_found_response
+        render json: {error: "Invalid username or password"}, status: :unauthorized
     end
 
     def new_user_params
