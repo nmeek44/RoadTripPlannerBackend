@@ -17,7 +17,7 @@ class AuthController < ApplicationController
             token = encode_token({user_id: @user.id})
             render json: { user: UserSerializer.new(@user), jwt: token }, status: :accepted
         else
-            render_not_found_response
+            render json: {error: "Username or Password is incorrect"}, status: :unauthorized
         end
     end
 
@@ -28,7 +28,5 @@ class AuthController < ApplicationController
         params.require(:user).permit(:username, :password)
     end
 
-    def render_not_found_response
-        render json: {error: "User not found"}, status: :render+_render_not_found_response
-    end
+    
 end

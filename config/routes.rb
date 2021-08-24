@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
   post "/login", to: "auth#login"
-  # get "/me", to: "users#me"
 
   post "/createUser", to: "auth#create"
   get "/profile", to: "users#show"
+
+  post "/createTrip", to: "trips#create"
+  post "/createLocation", to: "location#create"
 
   patch "/userTrips", to: "users#update"
 

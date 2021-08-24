@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 # rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
     skip_before_action :authorized, only: [:create, :login]
-
+   
     def login
         # byebug
         @user = User.find_by(username: params[:user][:username])

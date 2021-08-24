@@ -1,5 +1,6 @@
 class TripsController < ApplicationController
 rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
+before_action :authenticate, only: [:index, :show, :create, :update, :destroy]
 
     def index
         trips = Trip.all
@@ -12,8 +13,12 @@ rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
     end
 
     def create
-        new_trip = Trip.create!(new_trip_params)
-        render json: new_trip, status: :created_at
+        # results = Geocoder.search(new)
+        new_trip = Trip.new(new_trip_params)
+        new_trip.user_id = @current_user.id 
+        new_trip.save
+
+        render json: new_trip, status: :created
         rescue ActiveRecord::RecordInvalid => e
             render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
     end
@@ -36,7 +41,7 @@ rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
     end
 
     def new_trip_params
-        params.permit(:name, :startLatitude, :startLongitude, :user_id)
+        params.require(:trip).permit(:name, :startLatitude, :startLongitude)
     end
 
     def update_trip_params
