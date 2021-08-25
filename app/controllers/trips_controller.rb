@@ -1,5 +1,4 @@
 class TripsController < ApplicationController
-rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
 before_action :authenticate, only: [:index, :show, :create, :update, :destroy]
     # skip_before_action :authenticate, only: [:index, :create]
 
@@ -14,14 +13,18 @@ before_action :authenticate, only: [:index, :show, :create, :update, :destroy]
     end
 
     def create
-        # results = Geocoder.search(new)
+        results = Geocoder.search(startCityName)
+        citycoordinates = results.first.coordinates
+
         new_trip = Trip.new(new_trip_params)
+        new_trip.startLatitude = citycoordinates[0]
+        new_trip.startLongitude = citycoordinates[1]
         new_trip.user_id = @current_user.id 
         new_trip.save
 
         render json: new_trip, status: :created
-        rescue ActiveRecord::RecordInvalid => e
-            render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+    rescue ActiveRecord::RecordInvalid => e
+        render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
     end
 
     def update
@@ -33,20 +36,26 @@ before_action :authenticate, only: [:index, :show, :create, :update, :destroy]
     def destroy
         trip = Trip.find(params[:id])
         trip.destroy
+
+        render json: { message: "Trip successfully Deleted" }, status: :no_content
+    rescue ActiveRecord::RecordInvalid => e
+        render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
     end
 
     private
 
-    def render_not_found_response
-        render json: { error: "Trip not found"}, status: :render_not_found_response
+
+    def startCityName
+        params[:trip][:startCity]
     end
 
+
     def new_trip_params
-        params.require(:trip).permit(:name, :startLatitude, :startLongitude)
+        params.require(:trip).permit(:name, :startCity)
     end
 
     def update_trip_params
-        params.permit(:name, :startLatitue, :startLongitude)
+        params.permit(:name, :startCity, :startLatitude, :startLongitude)
     end
     
 end

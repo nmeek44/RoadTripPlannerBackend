@@ -7,7 +7,10 @@ Rails.application.routes.draw do
   get "/profile", to: "users#show"
 
   post "/createTrip", to: "trips#create"
-  post "/createLocation", to: "location#create"
+  delete "/deleteTrip/trips/:id", to: "trips#destroy"
+
+  post "/createNewStartingLocation", to: "locations#new_starting_location"
+  post "/createLocation", to: "locations#create"
 
   patch "/userTrips", to: "users#update"
 
